@@ -1,6 +1,9 @@
 import React, { useState, useCallback, useMemo } from "react";
+import { useTheme } from "next-themes";
 import ModuleSection from "@/components/ModuleSection";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Moon, Sun } from "lucide-react";
 
 interface Subject {
   id: string;
@@ -129,6 +132,7 @@ const initialModules: Module[] = [
 
 const Index = () => {
   const [modules, setModules] = useState(initialModules);
+  const { theme, setTheme } = useTheme();
 
   const calculateSubjectAverage = useCallback((subject: Subject) => {
     const { grades, hasTD, hasTP } = subject;
@@ -197,7 +201,21 @@ const Index = () => {
 
   return (
     <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 space-y-8 max-w-7xl mx-auto">
-      <header className="text-center space-y-4 animate-fadeIn">
+      <header className="text-center space-y-4 animate-fadeIn relative">
+        <div className="absolute right-0 top-0">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="rounded-full"
+          >
+            {theme === "dark" ? (
+              <Sun className="h-5 w-5" />
+            ) : (
+              <Moon className="h-5 w-5" />
+            )}
+          </Button>
+        </div>
         <h1 className="text-4xl font-bold tracking-tight">
           Simulation de la Moyenne - Master 1 Génie Logiciel
         </h1>
