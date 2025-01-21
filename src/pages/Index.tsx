@@ -3,7 +3,8 @@ import { useTheme } from "next-themes";
 import ModuleSection from "@/components/ModuleSection";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, Share2 } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Subject {
   id: string;
@@ -133,6 +134,7 @@ const initialModules: Module[] = [
 const Index = () => {
   const [modules, setModules] = useState(initialModules);
   const { theme, setTheme } = useTheme();
+  const { toast } = useToast();
 
   const calculateSubjectAverage = useCallback((subject: Subject) => {
     const { grades, hasTD, hasTP } = subject;
@@ -199,10 +201,49 @@ const Index = () => {
     );
   };
 
+  const handleShare = async () => {
+    const shareText = `Ma moyenne du semestre en Master 1 Génie Logiciel: ${semesterAverage.toFixed(2)}/20`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Moyenne Semestre',
+          text: shareText,
+          url: window.location.href
+        });
+      } catch (error) {
+        console.error('Error sharing:', error);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareText);
+        toast({
+          title: "Copié !",
+          description: "La moyenne a été copiée dans le presse-papier.",
+        });
+      } catch (error) {
+        console.error('Error copying to clipboard:', error);
+        toast({
+          variant: "destructive",
+          title: "Erreur",
+          description: "Impossible de copier la moyenne.",
+        });
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 space-y-8 max-w-7xl mx-auto">
       <header className="text-center space-y-4 animate-fadeIn relative">
-        <div className="absolute right-0 top-0">
+        <div className="absolute right-0 top-0 flex gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleShare}
+            className="rounded-full"
+          >
+            <Share2 className="h-5 w-5" />
+          </Button>
           <Button
             variant="ghost"
             size="icon"
