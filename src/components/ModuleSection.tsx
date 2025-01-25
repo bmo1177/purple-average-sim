@@ -1,21 +1,7 @@
 import React from "react";
 import SubjectCard from "./SubjectCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-interface Subject {
-  id: string;
-  title: string;
-  coefficient: number;
-  credits: number;
-  hasTD: boolean;
-  hasTP: boolean;
-  grades: {
-    td: string;
-    tp: string;
-    exam: string;
-  };
-  average: number;
-}
+import { Subject } from "@/types";
 
 interface ModuleSectionProps {
   title: string;

@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun, Printer } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { Subject } from "@/types";
 
 const iadModules = [
   {
@@ -198,6 +199,29 @@ const Index = () => {
   const [modules, setModules] = useState(iadModules);
   const { theme, setTheme } = useTheme();
   const { toast } = useToast();
+
+  const handleGradeChange = (moduleId: string, subjectId: string, type: "td" | "tp" | "exam", value: string) => {
+    setModules(prevModules =>
+      prevModules.map(module => {
+        if (module.id !== moduleId) return module;
+        
+        return {
+          ...module,
+          subjects: module.subjects.map(subject => {
+            if (subject.id !== subjectId) return subject;
+            
+            return {
+              ...subject,
+              grades: {
+                ...subject.grades,
+                [type]: value
+              }
+            };
+          })
+        };
+      })
+    );
+  };
 
   const calculateSubjectAverage = useCallback((subject: Subject) => {
     const { grades, hasTD, hasTP } = subject;
