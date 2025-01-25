@@ -4,28 +4,89 @@ import ModuleSection from "@/components/ModuleSection";
 import BranchSelector from "@/components/BranchSelector";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Moon, Sun, Share2 } from "lucide-react";
+import { Moon, Sun, Printer } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
-interface Subject {
-  id: string;
-  title: string;
-  coefficient: number;
-  credits: number;
-  hasTD: boolean;
-  hasTP: boolean;
-  grades: {
-    td: string;
-    tp: string;
-    exam: string;
-  };
-}
-
-interface Module {
-  id: string;
-  title: string;
-  subjects: Subject[];
-}
+const iadModules = [
+  {
+    id: "subjects",
+    title: "Subjects",
+    subjects: [
+      {
+        id: "anglais",
+        title: "Anglais technique et scientifique 1",
+        coefficient: 1,
+        credits: 1,
+        hasTD: false,
+        hasTP: false,
+        grades: { td: "", tp: "", exam: "" },
+      },
+      {
+        id: "calcul",
+        title: "Calcul différentiel et optimisation",
+        coefficient: 2,
+        credits: 2,
+        hasTD: true,
+        hasTP: false,
+        grades: { td: "", tp: "", exam: "" },
+      },
+      {
+        id: "mgp",
+        title: "Modèles graphiques probabilistes",
+        coefficient: 2,
+        credits: 2,
+        hasTD: false,
+        hasTP: true,
+        grades: { td: "", tp: "", exam: "" },
+      },
+      {
+        id: "python",
+        title: "Python",
+        coefficient: 2,
+        credits: 2,
+        hasTD: false,
+        hasTP: true,
+        grades: { td: "", tp: "", exam: "" },
+      },
+      {
+        id: "apprentissage",
+        title: "Apprentissage Artificiel",
+        coefficient: 3,
+        credits: 3,
+        hasTD: true,
+        hasTP: true,
+        grades: { td: "", tp: "", exam: "" },
+      },
+      {
+        id: "bdd",
+        title: "Bases de Données avancées et Data Mining",
+        coefficient: 3,
+        credits: 3,
+        hasTD: false,
+        hasTP: true,
+        grades: { td: "", tp: "", exam: "" },
+      },
+      {
+        id: "rn",
+        title: "Réseaux Neurones et Apprentissage Profond 1",
+        coefficient: 3,
+        credits: 3,
+        hasTD: true,
+        hasTP: true,
+        grades: { td: "", tp: "", exam: "" },
+      },
+      {
+        id: "analyse",
+        title: "Analyse de Données",
+        coefficient: 2,
+        credits: 2,
+        hasTD: true,
+        hasTP: false,
+        grades: { td: "", tp: "", exam: "" },
+      },
+    ],
+  },
+];
 
 const glModules = [
   {
@@ -132,108 +193,9 @@ const glModules = [
   },
 ];
 
-const iadModules = [
-  {
-    id: "uet",
-    title: "U.E.T - Communication",
-    subjects: [
-      {
-        id: "anglais",
-        title: "Anglais technique et scientifique 1",
-        coefficient: 1,
-        credits: 1,
-        hasTD: false,
-        hasTP: false,
-        grades: { td: "", tp: "", exam: "" },
-      },
-    ],
-  },
-  {
-    id: "ued1",
-    title: "U.E.D1 - Mathématiques pour l'IA",
-    subjects: [
-      {
-        id: "calcul",
-        title: "Calcul différentiel et optimisation",
-        coefficient: 2,
-        credits: 2,
-        hasTD: true,
-        hasTP: false,
-        grades: { td: "", tp: "", exam: "" },
-      },
-      {
-        id: "mgp",
-        title: "Modèles graphiques probabilistes",
-        coefficient: 2,
-        credits: 2,
-        hasTD: false,
-        hasTP: true,
-        grades: { td: "", tp: "", exam: "" },
-      },
-    ],
-  },
-  {
-    id: "uef1",
-    title: "U.E.F1 - Fondements de l'IA",
-    subjects: [
-      {
-        id: "python",
-        title: "Python",
-        coefficient: 2,
-        credits: 2,
-        hasTD: false,
-        hasTP: true,
-        grades: { td: "", tp: "", exam: "" },
-      },
-      {
-        id: "apprentissage",
-        title: "Apprentissage Artificiel",
-        coefficient: 3,
-        credits: 3,
-        hasTD: true,
-        hasTP: true,
-        grades: { td: "", tp: "", exam: "" },
-      },
-    ],
-  },
-  {
-    id: "uef2",
-    title: "U.E.F2 - IA Avancée",
-    subjects: [
-      {
-        id: "bdd",
-        title: "Bases de Données avancées et Data Mining",
-        coefficient: 3,
-        credits: 3,
-        hasTD: false,
-        hasTP: true,
-        grades: { td: "", tp: "", exam: "" },
-      },
-      {
-        id: "rn",
-        title: "Réseaux Neurones et Apprentissage Profond 1",
-        coefficient: 3,
-        credits: 3,
-        hasTD: true,
-        hasTP: true,
-        grades: { td: "", tp: "", exam: "" },
-      },
-      {
-        id: "analyse",
-        title: "Analyse de Données",
-        coefficient: 2,
-        credits: 2,
-        hasTD: true,
-        hasTP: false,
-        grades: { td: "", tp: "", exam: "" },
-      },
-    ],
-  },
-];
-
 const Index = () => {
-  const [branch, setBranch] = useState<string>("gl");
-  const [modules, setModules] = useState(glModules);
+  const [branch, setBranch] = useState<string>("iad");
+  const [modules, setModules] = useState(iadModules);
   const { theme, setTheme } = useTheme();
   const { toast } = useToast();
 
@@ -282,60 +244,34 @@ const Index = () => {
     setModules(newBranch === "gl" ? glModules : iadModules);
   };
 
-  const handleGradeChange = (
-    moduleId: string,
-    subjectId: string,
-    type: "td" | "tp" | "exam",
-    value: string
-  ) => {
-    setModules((prevModules) =>
-      prevModules.map((module) =>
-        module.id === moduleId
-          ? {
-              ...module,
-              subjects: module.subjects.map((subject) =>
-                subject.id === subjectId
-                  ? {
-                      ...subject,
-                      grades: { ...subject.grades, [type]: value },
-                    }
-                  : subject
-              ),
-            }
-          : module
-      )
-    );
-  };
+  const handlePrint = async () => {
+    const data = {
+      branch: branch === "gl" ? "Master 1 Génie Logiciel" : "Master 1 Intelligence Artificielle et Digitalisation",
+      average: semesterAverage,
+      modules: modules.map(module => ({
+        title: module.title,
+        subjects: module.subjects.map(subject => ({
+          title: subject.title,
+          grades: subject.grades,
+          average: calculateSubjectAverage(subject)
+        }))
+      }))
+    };
 
-  const handleShare = async () => {
-    const shareText = `Ma moyenne du semestre en Master 1 Génie Logiciel: ${semesterAverage.toFixed(2)}/20`;
-    
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Moyenne Semestre',
-          text: shareText,
-          url: window.location.href
-        });
-      } catch (error) {
-        console.error('Error sharing:', error);
-      }
-    } else {
-      try {
-        await navigator.clipboard.writeText(shareText);
-        toast({
-          title: "Copié !",
-          description: "La moyenne a été copiée dans le presse-papier.",
-        });
-      } catch (error) {
-        console.error('Error copying to clipboard:', error);
-        toast({
-          variant: "destructive",
-          title: "Erreur",
-          description: "Impossible de copier la moyenne.",
-        });
-      }
-    }
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `moyenne-${branch}-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    toast({
+      title: "Fichier JSON généré",
+      description: "Vos moyennes ont été exportées au format JSON.",
+    });
   };
 
   return (
@@ -345,10 +281,10 @@ const Index = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={handleShare}
+            onClick={handlePrint}
             className="rounded-full"
           >
-            <Share2 className="h-5 w-5" />
+            <Printer className="h-5 w-5" />
           </Button>
           <Button
             variant="ghost"
@@ -396,6 +332,7 @@ const Index = () => {
               handleGradeChange(module.id, subjectId, type, value)
             }
             moduleAverage={calculateModuleAverage(module.subjects)}
+            showCredits={branch === "gl"}
           />
         ))}
       </div>

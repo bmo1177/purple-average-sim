@@ -26,6 +26,7 @@ interface ModuleSectionProps {
     value: string
   ) => void;
   moduleAverage: number;
+  showCredits?: boolean;
 }
 
 const ModuleSection: React.FC<ModuleSectionProps> = ({
@@ -33,6 +34,7 @@ const ModuleSection: React.FC<ModuleSectionProps> = ({
   subjects,
   onGradeChange,
   moduleAverage,
+  showCredits = true,
 }) => {
   return (
     <section className="space-y-4 animate-slideIn">
@@ -59,6 +61,7 @@ const ModuleSection: React.FC<ModuleSectionProps> = ({
                 onGradeChange(subject.id, type, value)
               }
               average={subject.average}
+              showCredits={showCredits}
             />
           ))}
         </CardContent>

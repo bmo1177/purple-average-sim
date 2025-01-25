@@ -15,6 +15,7 @@ interface SubjectCardProps {
   };
   onGradeChange: (type: "td" | "tp" | "exam", value: string) => void;
   average: number;
+  showCredits?: boolean;
 }
 
 const SubjectCard: React.FC<SubjectCardProps> = ({
@@ -26,13 +27,15 @@ const SubjectCard: React.FC<SubjectCardProps> = ({
   grades,
   onGradeChange,
   average,
+  showCredits = true,
 }) => {
   return (
     <Card className="glass-card hover-scale">
       <CardHeader className="pb-2">
         <CardTitle className="text-lg font-semibold">{title}</CardTitle>
         <div className="text-sm text-muted-foreground">
-          Coefficient: {coefficient} | Credits: {credits}
+          Coefficient: {coefficient}
+          {showCredits && ` | Credits: ${credits}`}
         </div>
       </CardHeader>
       <CardContent>
