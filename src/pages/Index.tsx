@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { useTheme } from "next-themes";
 import ModuleSection from "@/components/ModuleSection";
+import BranchSelector from "@/components/BranchSelector";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun, Share2 } from "lucide-react";
@@ -26,7 +27,7 @@ interface Module {
   subjects: Subject[];
 }
 
-const initialModules: Module[] = [
+const glModules = [
   {
     id: "uet",
     title: "U.E.T - Communication",
@@ -131,8 +132,108 @@ const initialModules: Module[] = [
   },
 ];
 
+const iadModules = [
+  {
+    id: "uet",
+    title: "U.E.T - Communication",
+    subjects: [
+      {
+        id: "anglais",
+        title: "Anglais technique et scientifique 1",
+        coefficient: 1,
+        credits: 1,
+        hasTD: false,
+        hasTP: false,
+        grades: { td: "", tp: "", exam: "" },
+      },
+    ],
+  },
+  {
+    id: "ued1",
+    title: "U.E.D1 - Mathématiques pour l'IA",
+    subjects: [
+      {
+        id: "calcul",
+        title: "Calcul différentiel et optimisation",
+        coefficient: 2,
+        credits: 2,
+        hasTD: true,
+        hasTP: false,
+        grades: { td: "", tp: "", exam: "" },
+      },
+      {
+        id: "mgp",
+        title: "Modèles graphiques probabilistes",
+        coefficient: 2,
+        credits: 2,
+        hasTD: false,
+        hasTP: true,
+        grades: { td: "", tp: "", exam: "" },
+      },
+    ],
+  },
+  {
+    id: "uef1",
+    title: "U.E.F1 - Fondements de l'IA",
+    subjects: [
+      {
+        id: "python",
+        title: "Python",
+        coefficient: 2,
+        credits: 2,
+        hasTD: false,
+        hasTP: true,
+        grades: { td: "", tp: "", exam: "" },
+      },
+      {
+        id: "apprentissage",
+        title: "Apprentissage Artificiel",
+        coefficient: 3,
+        credits: 3,
+        hasTD: true,
+        hasTP: true,
+        grades: { td: "", tp: "", exam: "" },
+      },
+    ],
+  },
+  {
+    id: "uef2",
+    title: "U.E.F2 - IA Avancée",
+    subjects: [
+      {
+        id: "bdd",
+        title: "Bases de Données avancées et Data Mining",
+        coefficient: 3,
+        credits: 3,
+        hasTD: false,
+        hasTP: true,
+        grades: { td: "", tp: "", exam: "" },
+      },
+      {
+        id: "rn",
+        title: "Réseaux Neurones et Apprentissage Profond 1",
+        coefficient: 3,
+        credits: 3,
+        hasTD: true,
+        hasTP: true,
+        grades: { td: "", tp: "", exam: "" },
+      },
+      {
+        id: "analyse",
+        title: "Analyse de Données",
+        coefficient: 2,
+        credits: 2,
+        hasTD: true,
+        hasTP: false,
+        grades: { td: "", tp: "", exam: "" },
+      },
+    ],
+  },
+];
+
 const Index = () => {
-  const [modules, setModules] = useState(initialModules);
+  const [branch, setBranch] = useState<string>("gl");
+  const [modules, setModules] = useState(glModules);
   const { theme, setTheme } = useTheme();
   const { toast } = useToast();
 
@@ -175,6 +276,11 @@ const Index = () => {
     }, 0);
     return totalCredits ? weightedSum / totalCredits : 0;
   }, [modules, calculateSubjectAverage]);
+
+  const handleBranchChange = (newBranch: string) => {
+    setBranch(newBranch);
+    setModules(newBranch === "gl" ? glModules : iadModules);
+  };
 
   const handleGradeChange = (
     moduleId: string,
@@ -258,12 +364,15 @@ const Index = () => {
           </Button>
         </div>
         <h1 className="text-4xl font-bold tracking-tight">
-          Simulation de la Moyenne - Master 1 Génie Logiciel
+          Simulation de la Moyenne
         </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Calculez votre moyenne du premier semestre en entrant vos notes.
-          Les moyennes sont calculées automatiquement selon la formule : 40% TD/TP + 60% Examen.
-        </p>
+        <div className="max-w-xl mx-auto space-y-4">
+          <BranchSelector value={branch} onChange={handleBranchChange} />
+          <p className="text-lg text-muted-foreground">
+            Calculez votre moyenne du premier semestre en entrant vos notes.
+            Les moyennes sont calculées automatiquement selon la formule : 40% TD/TP + 60% Examen.
+          </p>
+        </div>
       </header>
 
       <Card className="glass-card p-4 text-center animate-fadeIn">
@@ -292,7 +401,7 @@ const Index = () => {
       </div>
 
       <footer className="text-center text-sm text-muted-foreground pt-8 pb-4 animate-fadeIn">
-        <p>Développé pour Master 1 Génie Logiciel</p>
+        <p>Développé pour Master 1 Génie Logiciel et Intelligence Artificielle et Digitalisation</p>
         <a
           href="#"
           className="text-primary hover:underline transition-colors"
