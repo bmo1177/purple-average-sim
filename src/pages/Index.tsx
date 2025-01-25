@@ -7,192 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Moon, Sun, Printer } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Subject } from "@/types";
-
-const iadModules = [
-  {
-    id: "subjects",
-    title: "Subjects",
-    subjects: [
-      {
-        id: "anglais",
-        title: "Anglais technique et scientifique 1",
-        coefficient: 1,
-        credits: 1,
-        hasTD: false,
-        hasTP: false,
-        grades: { td: "", tp: "", exam: "" },
-      },
-      {
-        id: "calcul",
-        title: "Calcul différentiel et optimisation",
-        coefficient: 2,
-        credits: 2,
-        hasTD: true,
-        hasTP: false,
-        grades: { td: "", tp: "", exam: "" },
-      },
-      {
-        id: "mgp",
-        title: "Modèles graphiques probabilistes",
-        coefficient: 2,
-        credits: 2,
-        hasTD: false,
-        hasTP: true,
-        grades: { td: "", tp: "", exam: "" },
-      },
-      {
-        id: "python",
-        title: "Python",
-        coefficient: 2,
-        credits: 2,
-        hasTD: false,
-        hasTP: true,
-        grades: { td: "", tp: "", exam: "" },
-      },
-      {
-        id: "apprentissage",
-        title: "Apprentissage Artificiel",
-        coefficient: 3,
-        credits: 3,
-        hasTD: true,
-        hasTP: true,
-        grades: { td: "", tp: "", exam: "" },
-      },
-      {
-        id: "bdd",
-        title: "Bases de Données avancées et Data Mining",
-        coefficient: 3,
-        credits: 3,
-        hasTD: false,
-        hasTP: true,
-        grades: { td: "", tp: "", exam: "" },
-      },
-      {
-        id: "rn",
-        title: "Réseaux Neurones et Apprentissage Profond 1",
-        coefficient: 3,
-        credits: 3,
-        hasTD: true,
-        hasTP: true,
-        grades: { td: "", tp: "", exam: "" },
-      },
-      {
-        id: "analyse",
-        title: "Analyse de Données",
-        coefficient: 2,
-        credits: 2,
-        hasTD: true,
-        hasTP: false,
-        grades: { td: "", tp: "", exam: "" },
-      },
-    ],
-  },
-];
-
-const glModules = [
-  {
-    id: "uet",
-    title: "U.E.T - Communication",
-    subjects: [
-      {
-        id: "anglais",
-        title: "Anglais",
-        coefficient: 1,
-        credits: 1,
-        hasTD: false,
-        hasTP: false,
-        grades: { td: "", tp: "", exam: "" },
-      },
-    ],
-  },
-  {
-    id: "ued1",
-    title: "U.E.D1 - Logique pour Intelligence Artificielle",
-    subjects: [
-      {
-        id: "logique",
-        title: "Logique pour Intelligence Artificielle",
-        coefficient: 2,
-        credits: 2,
-        hasTD: true,
-        hasTP: false,
-        grades: { td: "", tp: "", exam: "" },
-      },
-    ],
-  },
-  {
-    id: "uem1",
-    title: "U.EM1 - Qualité Logiciel",
-    subjects: [
-      {
-        id: "complexite",
-        title: "Compléxité Algorithmique",
-        coefficient: 2,
-        credits: 5,
-        hasTD: true,
-        hasTP: true,
-        grades: { td: "", tp: "", exam: "" },
-      },
-      {
-        id: "qualite",
-        title: "Gestion de la Qualité",
-        coefficient: 2,
-        credits: 4,
-        hasTD: true,
-        hasTP: false,
-        grades: { td: "", tp: "", exam: "" },
-      },
-    ],
-  },
-  {
-    id: "uef1",
-    title: "UEF.1 - Fondement du Génie Logiciel",
-    subjects: [
-      {
-        id: "genie",
-        title: "Génie Logiciel",
-        coefficient: 2,
-        credits: 4,
-        hasTD: true,
-        hasTP: false,
-        grades: { td: "", tp: "", exam: "" },
-      },
-      {
-        id: "programmation",
-        title: "Programmation fonctionnelle",
-        coefficient: 3,
-        credits: 6,
-        hasTD: true,
-        hasTP: true,
-        grades: { td: "", tp: "", exam: "" },
-      },
-    ],
-  },
-  {
-    id: "uef2",
-    title: "UEF2 - Bases de Données Avancées",
-    subjects: [
-      {
-        id: "aasgbd",
-        title: "Architecture et Administration de SGBD",
-        coefficient: 2,
-        credits: 4,
-        hasTD: false,
-        hasTP: true,
-        grades: { td: "", tp: "", exam: "" },
-      },
-      {
-        id: "datamining",
-        title: "Base de Données et Data Mining",
-        coefficient: 2,
-        credits: 4,
-        hasTD: false,
-        hasTP: true,
-        grades: { td: "", tp: "", exam: "" },
-      },
-    ],
-  },
-];
+import { iadModules, glModules, giModules, rtModules } from "@/data/branches";
 
 const Index = () => {
   const [branch, setBranch] = useState<string>("iad");
@@ -200,24 +15,29 @@ const Index = () => {
   const { theme, setTheme } = useTheme();
   const { toast } = useToast();
 
-  const handleGradeChange = (moduleId: string, subjectId: string, type: "td" | "tp" | "exam", value: string) => {
-    setModules(prevModules =>
-      prevModules.map(module => {
+  const handleGradeChange = (
+    moduleId: string,
+    subjectId: string,
+    type: "td" | "tp" | "exam",
+    value: string
+  ) => {
+    setModules((prevModules) =>
+      prevModules.map((module) => {
         if (module.id !== moduleId) return module;
-        
+
         return {
           ...module,
-          subjects: module.subjects.map(subject => {
+          subjects: module.subjects.map((subject) => {
             if (subject.id !== subjectId) return subject;
-            
+
             return {
               ...subject,
               grades: {
                 ...subject.grades,
-                [type]: value
-              }
+                [type]: value,
+              },
             };
-          })
+          }),
         };
       })
     );
@@ -226,29 +46,37 @@ const Index = () => {
   const calculateSubjectAverage = useCallback((subject: Subject) => {
     const { grades, hasTD, hasTP } = subject;
     const exam = parseFloat(grades.exam) || 0;
-    
+
     if (!hasTD && !hasTP) return exam;
 
     const practicalWork = [];
     if (hasTD) practicalWork.push(parseFloat(grades.td) || 0);
     if (hasTP) practicalWork.push(parseFloat(grades.tp) || 0);
-    
-    const practicalAverage = practicalWork.reduce((a, b) => a + b, 0) / practicalWork.length;
+
+    const practicalAverage =
+      practicalWork.reduce((a, b) => a + b, 0) / practicalWork.length;
     return practicalAverage * 0.4 + exam * 0.6;
   }, []);
 
-  const calculateModuleAverage = useCallback((subjects: Subject[]) => {
-    const totalCoefficient = subjects.reduce((sum, subject) => sum + subject.coefficient, 0);
-    const weightedSum = subjects.reduce((sum, subject) => {
-      const average = calculateSubjectAverage(subject);
-      return sum + average * subject.coefficient;
-    }, 0);
-    return totalCoefficient ? weightedSum / totalCoefficient : 0;
-  }, [calculateSubjectAverage]);
+  const calculateModuleAverage = useCallback(
+    (subjects: Subject[]) => {
+      const totalCoefficient = subjects.reduce(
+        (sum, subject) => sum + subject.coefficient,
+        0
+      );
+      const weightedSum = subjects.reduce((sum, subject) => {
+        const average = calculateSubjectAverage(subject);
+        return sum + average * subject.coefficient;
+      }, 0);
+      return totalCoefficient ? weightedSum / totalCoefficient : 0;
+    },
+    [calculateSubjectAverage]
+  );
 
   const semesterAverage = useMemo(() => {
     const totalCredits = modules.reduce(
-      (sum, module) => sum + module.subjects.reduce((s, subject) => s + subject.credits, 0),
+      (sum, module) =>
+        sum + module.subjects.reduce((s, subject) => s + subject.credits, 0),
       0
     );
     const weightedSum = modules.reduce((sum, module) => {
@@ -265,28 +93,51 @@ const Index = () => {
 
   const handleBranchChange = (newBranch: string) => {
     setBranch(newBranch);
-    setModules(newBranch === "gl" ? glModules : iadModules);
+    switch (newBranch) {
+      case "gl":
+        setModules(glModules);
+        break;
+      case "gi":
+        setModules(giModules);
+        break;
+      case "rt":
+        setModules(rtModules);
+        break;
+      default:
+        setModules(iadModules);
+    }
   };
 
   const handlePrint = async () => {
     const data = {
-      branch: branch === "gl" ? "Master 1 Génie Logiciel" : "Master 1 Intelligence Artificielle et Digitalisation",
+      branch:
+        branch === "gl"
+          ? "Master 1 Génie Logiciel"
+          : branch === "gi"
+          ? "Master 1 Génie Informatique"
+          : branch === "rt"
+          ? "Master 1 Réseaux et Télécommunications"
+          : "Master 1 Intelligence Artificielle et Digitalisation",
       average: semesterAverage,
-      modules: modules.map(module => ({
+      modules: modules.map((module) => ({
         title: module.title,
-        subjects: module.subjects.map(subject => ({
+        subjects: module.subjects.map((subject) => ({
           title: subject.title,
           grades: subject.grades,
-          average: calculateSubjectAverage(subject)
-        }))
-      }))
+          average: calculateSubjectAverage(subject),
+        })),
+      })),
     };
 
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
-    link.download = `moyenne-${branch}-${new Date().toISOString().split('T')[0]}.json`;
+    link.download = `moyenne-${branch}-${
+      new Date().toISOString().split("T")[0]
+    }.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -329,8 +180,9 @@ const Index = () => {
         <div className="max-w-xl mx-auto space-y-4">
           <BranchSelector value={branch} onChange={handleBranchChange} />
           <p className="text-lg text-muted-foreground">
-            Calculez votre moyenne du premier semestre en entrant vos notes.
-            Les moyennes sont calculées automatiquement selon la formule : 40% TD/TP + 60% Examen.
+            Calculez votre moyenne du premier semestre en entrant vos notes. Les
+            moyennes sont calculées automatiquement selon la formule : 40% TD/TP +
+            60% Examen.
           </p>
         </div>
       </header>
@@ -356,19 +208,24 @@ const Index = () => {
               handleGradeChange(module.id, subjectId, type, value)
             }
             moduleAverage={calculateModuleAverage(module.subjects)}
-            showCredits={branch === "gl"}
+            showCredits={branch !== "iad"}
           />
         ))}
       </div>
 
       <footer className="text-center text-sm text-muted-foreground pt-8 pb-4 animate-fadeIn">
-        <p>Développé pour Master 1 Génie Logiciel et Intelligence Artificielle et Digitalisation</p>
+        <p>
+          Développé pour Master 1 Génie Logiciel et Intelligence Artificielle et
+          Digitalisation
+        </p>
         <a
           href="#"
           className="text-primary hover:underline transition-colors"
           onClick={(e) => {
             e.preventDefault();
-            alert("La moyenne est calculée selon la formule : 40% TD/TP + 60% Examen pour chaque matière, puis pondérée par les coefficients et crédits.");
+            alert(
+              "La moyenne est calculée selon la formule : 40% TD/TP + 60% Examen pour chaque matière, puis pondérée par les coefficients et crédits."
+            );
           }}
         >
           En savoir plus sur le calcul des moyennes
