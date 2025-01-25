@@ -135,9 +135,8 @@ const Index = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `moyenne-${branch}-${
-      new Date().toISOString().split("T")[0]
-    }.json`;
+    const currentDate = new Date().toISOString().split("T")[0];
+    link.download = `moyenne-s1-${branch}-${currentDate}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -175,7 +174,7 @@ const Index = () => {
           </Button>
         </div>
         <h1 className="text-4xl font-bold tracking-tight">
-          Simulation de la Moyenne
+          Simulateur de Moyenne - 1er Semestre
         </h1>
         <div className="max-w-xl mx-auto space-y-4">
           <BranchSelector value={branch} onChange={handleBranchChange} />
