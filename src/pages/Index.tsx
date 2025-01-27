@@ -43,10 +43,26 @@ const Index = () => {
     );
   };
 
-  const calculateSubjectAverage = useCallback((subject: Subject) => {
+  const calculateSubjectAverage = useCallback((subject: Subject, currentBranch: string) => {
     const { grades, hasTD, hasTP } = subject;
     const exam = parseFloat(grades.exam) || 0;
 
+    // Special calculation for GL branch
+    if (currentBranch === "gl") {
+      if (!hasTD && !hasTP) return exam;
+
+      const practicalWork = [];
+      if (hasTD) practicalWork.push(parseFloat(grades.td) || 0);
+      if (hasTP) practicalWork.push(parseFloat(grades.tp) || 0);
+
+      const practicalAverage =
+        practicalWork.reduce((a, b) => a + b, 0) / practicalWork.length;
+      
+      // Apply 40% TD/TP + 60% Exam formula
+      return (practicalAverage * 0.4) + (exam * 0.6);
+    }
+
+    // Default calculation for other branches
     if (!hasTD && !hasTP) return exam;
 
     const practicalWork = [];
@@ -65,15 +81,27 @@ const Index = () => {
         0
       );
       const weightedSum = subjects.reduce((sum, subject) => {
-        const average = calculateSubjectAverage(subject);
+        const average = calculateSubjectAverage(subject, branch);
         return sum + average * subject.coefficient;
       }, 0);
       return totalCoefficient ? weightedSum / totalCoefficient : 0;
     },
-    [calculateSubjectAverage]
+    [calculateSubjectAverage, branch]
   );
 
   const semesterAverage = useMemo(() => {
+    if (branch === "gl") {
+      // For GL branch: sum of (subject average * coefficient) divided by 16
+      const totalWeightedSum = modules.reduce((sum, module) => {
+        return sum + module.subjects.reduce((moduleSum, subject) => {
+          const subjectAverage = calculateSubjectAverage(subject, branch);
+          return moduleSum + (subjectAverage * subject.coefficient);
+        }, 0);
+      }, 0);
+      return totalWeightedSum / 16;
+    }
+
+    // Default calculation for other branches
     const totalCredits = modules.reduce(
       (sum, module) =>
         sum + module.subjects.reduce((s, subject) => s + subject.credits, 0),
@@ -83,13 +111,13 @@ const Index = () => {
       return (
         sum +
         module.subjects.reduce((s, subject) => {
-          const average = calculateSubjectAverage(subject);
+          const average = calculateSubjectAverage(subject, branch);
           return s + average * subject.credits;
         }, 0)
       );
     }, 0);
     return totalCredits ? weightedSum / totalCredits : 0;
-  }, [modules, calculateSubjectAverage]);
+  }, [modules, calculateSubjectAverage, branch]);
 
   const handleBranchChange = (newBranch: string) => {
     setBranch(newBranch);
@@ -124,7 +152,7 @@ const Index = () => {
         subjects: module.subjects.map((subject) => ({
           title: subject.title,
           grades: subject.grades,
-          average: calculateSubjectAverage(subject),
+          average: calculateSubjectAverage(subject, branch),
         })),
       })),
     };
@@ -201,7 +229,7 @@ const Index = () => {
             title={module.title}
             subjects={module.subjects.map((subject) => ({
               ...subject,
-              average: calculateSubjectAverage(subject),
+              average: calculateSubjectAverage(subject, branch),
             }))}
             onGradeChange={(subjectId, type, value) =>
               handleGradeChange(module.id, subjectId, type, value)
